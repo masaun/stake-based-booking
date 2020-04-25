@@ -1,4 +1,4 @@
-pragma solidity ^0.5.10;
+pragma solidity ^0.5.15;
 pragma experimental ABIEncoderV2;
 
 
@@ -136,7 +136,7 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
             uint _comingTime = customer.comingTime;
 
             if (_isComingShop == true) {
-                if (startTime <= _comingTime <= endTime) {
+                if (startTime <= _comingTime && _comingTime <= endTime) {
                     distributedAddressList.push(_customerAddress);
                 }
             }
@@ -161,7 +161,7 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
             uint _amount = customer.amount;
 
             if (_isComingShop == true) {
-                if (startTime <= _comingTime <= endTime) {
+                if (startTime <= _comingTime && _comingTime <= endTime) {
                     totalBookedBalanceToday.add(_amount);
                 }
             }

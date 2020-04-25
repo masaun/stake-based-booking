@@ -39,10 +39,38 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         daiAddress = _erc20;
     }
 
+    /***
+     * @dev - Character
+     * Customer
+     * Shop
+     * DonatedOrganization
+     **/
+
 
     /***
-     * @dev - Functions
+     * @dev - Stake DAI when customr book
      **/
+    function booking(address _customer, uint256 _amount) public returns (bool) {}
+    
+    /***
+     * @dev - Check whether booked customer come or not
+     **/
+    function approveCustomerComeShop() public returns (bool) {}
+    
+    /***
+     * @dev - Local Organization register to donationList
+     **/
+    function registerLocalOrganization() public returns (bool) {}
+
+    /***
+     * @dev - Destribute pooled money
+     *      - The period for tally and executing distribution is 24:00 every day
+     **/
+    function destributePooledMoney() public returns (bool) {}
+
+
+
+
 
 
 
@@ -57,19 +85,19 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
 
         address _to = 0x8Fc9d07b1B9542A71C4ba1702Cd230E160af6EB3;
 
-        address _owner = address(this); //@dev - contract address which do delegate call
-        //address _owner = msg.sender;
+        //address _owner = address(this); //@dev - contract address which do delegate call
+        address _owner = msg.sender;
         address _spender = 0xaD6D458402F60fD3Bd25163575031ACDce07538D;    // DAI address on Ropsten
         //address _spender = 0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa;    // DAI address on Kovan
 
         //@dev - Allow _spender to withdraw from your account, multiple times, up to the _value amount. 
-        erc20.approve(_spender, _mintAmount.mul(10**18));
+        erc20.approve(_spender, _mintAmount);
             
         //@dev - Returns the amount which _spender is still allowed to withdraw from _owner
         uint256 _approvedValue = erc20.allowance(_owner, _spender);
         
         //@dev - Expected transferred value is 1.05 DAI（= 1050000000000000000 Wei）
-        erc20.transfer(_to, _mintAmount.mul(10**18).div(10**2));        
+        erc20.transfer(_to, _mintAmount);        
 
         emit Example(_id, _exchangeRateCurrent, msg.sender, _approvedValue);
 

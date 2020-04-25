@@ -35,14 +35,21 @@ export default class MarketplaceRegistry extends Component {
      * @dev - Test Functions
      **/
     getTestData = async () => {
-        const { accounts, marketplace_registry, web3 } = this.state;
+        const { accounts, web3, marketplace_registry, marketplace_registry_address } = this.state;
 
         const _currentAccount = accounts[0];
         let balanceOf1 = await marketplace_registry.methods.balanceOfCurrentAccount(_currentAccount).call();
         console.log('=== response of balanceOfCurrentAccount() / 1 ===', balanceOf1);
  
-        const _mintAmount = 105;  // Expected transferred value is 1.05 DAI（= 1050000000000000000 Wei）s
-        let response = await marketplace_registry.methods.testFunc(_mintAmount).send({ from: accounts[0] })
+        //@dev - Transfer DAI from UserWallet to DAI-contract
+        const _mintAmount = 1.05;  // Expected transferred value is 1.05 DAI（= 1050000000000000000 Wei）s
+        let mintAmount = _mintAmount.toString();
+        const decimals = 18;
+        let _amount = web3.utils.toWei(mintAmount, 'ether');
+        console.log('=== _amount ===', _amount);
+
+        const _to = marketplace_registry_address;        
+        let response = await marketplace_registry.methods.testFunc(_amount).send({ from: accounts[0] });
         console.log('=== response of testFunc() function ===', response);
 
         let balanceOf2 = await marketplace_registry.methods.balanceOfCurrentAccount(_currentAccount).call();

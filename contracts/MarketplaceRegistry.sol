@@ -53,7 +53,7 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
      * @dev - Stake DAI when customr book
      **/
     function booking(uint256 _amount) public returns (bool) {
-        Customer public customer = customers[currentCustomerId];
+        Customer storage customer = customers[currentCustomerId];
         customer.customerId = currentCustomerId;
         customer.address = msg.sender;
         customer.amount = _amount;
@@ -70,7 +70,10 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
     /***
      * @dev - Check whether booked customer come or not
      **/
-    function approveCustomerComeShop() public returns (bool) {}
+    function approveCustomerComeShop(uint _customerId) public returns (bool) {
+        Customer storage customer = customers[currentCustomerId];
+        customer.isComingShop = true;
+    }
     
     /***
      * @dev - Local Organization register to donationList

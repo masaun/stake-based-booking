@@ -98,7 +98,7 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         (startTime, endTime) = getTimeframeToday();
 
         //@dev - Actual time when booked customer came
-        address[] memory _distributedAddressList = getDistributedAddress();
+        //address[] memory _distributedAddressList = getDistributedAddress();
 
         //@dev - Get tatal balance which booked date is today
         uint _totalBookedBalanceToday = getTotalBookedBalanceToday();
@@ -107,10 +107,15 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         uint distributedAmountPerOneAddress = _totalBookedBalanceToday.div(_distributedAddressList.length);
 
         //@dev - Execute distribution 
-        for (uint i=0; i < _distributedAddressList.length; i++) {
-            address to = _distributedAddressList[i];
-            erc20.transfer(to, distributedAmountPerOneAddress);
-        }
+        uint i = 1;
+        while (i <= currentCustomerId) {
+            address _distributedAddress = getDistributedAddress(i);
+            erc20.transfer(_distributedAddress, distributedAmountPerOneAddress);
+        } 
+        // for (uint i=0; i < _distributedAddressList.length; i++) {
+        //     address to = _distributedAddressList[i];
+        //     erc20.transfer(to, distributedAmountPerOneAddress);
+        // }
     }
 
     function getTimeframeToday() internal view returns (uint _startTime, uint _endTime) {
@@ -120,29 +125,43 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         return (_startTime, _endTime);
     }
 
-    function getDistributedAddress() internal view returns (address[] memory _distributedAddressList) {
+    function getDistributedAddress(uint _customerId) internal view returns (address memory _distributedAddress) {
         //@dev - Time frame of today
         uint startTime;
         uint endTime;
         (startTime, endTime) = getTimeframeToday();
 
-        address[] memory distributedAddressList;
+        address distributedAddress;
+        //address[] memory distributedAddressList;
 
         //@dev - Actual time when booked customer came
-        for (uint i=1; i <= currentCustomerId; i++) {
-            Customer memory customer = customers[i];
-            address _customerAddress = customer.customerAddress;
-            bool _isComingShop = customer.isComingShop;
-            uint _comingTime = customer.comingTime;
+        Customer memory customer = customers[_customerId];
+        address _customerAddress = customer.customerAddress;
+        bool _isComingShop = customer.isComingShop;
+        uint _comingTime = customer.comingTime;
 
-            if (_isComingShop == true) {
-                if (startTime <= _comingTime && _comingTime <= endTime) {
-                    distributedAddressList.push(_customerAddress);
-                }
+        if (_isComingShop == true) {
+            if (startTime <= _comingTime && _comingTime <= endTime) {
+                distributedAddress = _customerAddress;
             }
         }
 
-        return distributedAddressList;
+        //@dev - Actual time when booked customer came
+        // for (uint i=1; i <= currentCustomerId; i++) {
+        //     Customer memory customer = customers[i];
+        //     address _customerAddress = customer.customerAddress;
+        //     bool _isComingShop = customer.isComingShop;
+        //     uint _comingTime = customer.comingTime;
+
+        //     if (_isComingShop == true) {
+        //         if (startTime <= _comingTime && _comingTime <= endTime) {
+        //             distributedAddressList.push(_customerAddress);
+        //         }
+        //     }
+        // }
+
+        return distributedAddress;
+        //return distributedAddressList;
     }
     
     function getTotalBookedBalanceToday() internal view returns (uint _totalBookedBalanceToday) {

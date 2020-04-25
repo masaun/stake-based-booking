@@ -9,8 +9,8 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 
 // Storage
-import "./storage/McStorage.sol";
-import "./storage/McConstants.sol";
+import "./storage/SbStorage.sol";
+import "./storage/SbConstants.sol";
 
 // DAI
 import "./DAI/dai.sol";
@@ -23,7 +23,7 @@ import "./lib/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeContract
 /***
  * @notice - This contract is that ...
  **/
-contract MarketplaceRegistry is Ownable, McStorage, McConstants {
+contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
     using SafeMath for uint;
 
     uint currentCustomerId = 1;
@@ -212,7 +212,7 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
      **/
     function testFunc(uint256 _mintAmount) public returns (bool, uint256 _approvedValue) {
         uint256 _id = 1;
-        uint256 _exchangeRateCurrent = McConstants.onePercent;
+        uint256 _exchangeRateCurrent = SbConstants.onePercent;
 
         address _to = 0x8Fc9d07b1B9542A71C4ba1702Cd230E160af6EB3;
 
@@ -232,7 +232,7 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
 
         emit Example(_id, _exchangeRateCurrent, msg.sender, _approvedValue);
 
-        return (McConstants.CONFIRMED, _approvedValue);
+        return (SbConstants.CONFIRMED, _approvedValue);
     }
 
     function balanceOfCurrentAccount(address _currentAccount) public view returns (uint256 balanceOfCurrentAccount) {
@@ -250,13 +250,6 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         erc20.transferFrom(_from, _to, _mintAmount);
 
         emit _TransferFrom(_from, _to, _mintAmount, _allowanceAmount);
-
-        // erc20.approve(daiAddress, _mintAmount.mul(10**18));
-        // uint256 _allowanceAmount = erc20.allowance(address(this), daiAddress);
-
-        // erc20.transferFrom(_from, _to, _mintAmount.mul(10**18).div(10**2));
-
-        // emit _TransferFrom(_from, _to, _mintAmount.mul(10**18), _allowanceAmount);
     }
     
 }

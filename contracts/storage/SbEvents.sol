@@ -1,9 +1,9 @@
 pragma solidity ^0.5.11;
 
-import "./McObjects.sol";
+import "./SbObjects.sol";
 
 
-contract McEvents {
+contract SbEvents {
 
     event Booking(
         uint customerId,

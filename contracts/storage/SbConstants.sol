@@ -5,7 +5,7 @@ import "../lib/EthAddressLib.sol";
 
 
 /// @title Shared constants
-contract McConstants {
+contract SbConstants {
 
     /**
      * @notice Eth address

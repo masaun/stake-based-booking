@@ -16,7 +16,7 @@ import { walletAddressList } from '../../data/tokenAddress/tokenAddress.js'
 import { contractAddressList } from '../../data/contractAddress/contractAddress.js'
 
 
-export default class MarketplaceRegistry extends Component {
+export default class StakeBasedBooking extends Component {
     constructor(props) {    
         super(props);
 
@@ -35,9 +35,9 @@ export default class MarketplaceRegistry extends Component {
      * @dev - Main Functions
      **/
     getTimeframeToday = async () => {
-        const { accounts, web3, marketplace_registry, marketplace_registry_address } = this.state;
+        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
 
-        let res = await marketplace_registry.methods.getTimeframeToday().call();
+        let res = await stake_based_booking.methods.getTimeframeToday().call();
         console.log('=== response of getTimeframeToday() ===', res);
     }
 
@@ -47,10 +47,10 @@ export default class MarketplaceRegistry extends Component {
      * @dev - Test Functions
      **/
     getTestData = async () => {
-        const { accounts, web3, marketplace_registry, marketplace_registry_address } = this.state;
+        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
 
         const _currentAccount = accounts[0];
-        let balanceOf1 = await marketplace_registry.methods.balanceOfCurrentAccount(_currentAccount).call();
+        let balanceOf1 = await stake_based_booking.methods.balanceOfCurrentAccount(_currentAccount).call();
         console.log('=== response of balanceOfCurrentAccount() / 1 ===', balanceOf1);
  
         //@dev - Transfer DAI from UserWallet to DAI-contract
@@ -60,16 +60,16 @@ export default class MarketplaceRegistry extends Component {
         let _amount = web3.utils.toWei(mintAmount, 'ether');
         console.log('=== _amount ===', _amount);
 
-        const _to = marketplace_registry_address;        
-        let response = await marketplace_registry.methods.testFunc(_amount).send({ from: accounts[0] });
+        const _to = stake_based_booking_address;        
+        let response = await stake_based_booking.methods.testFunc(_amount).send({ from: accounts[0] });
         console.log('=== response of testFunc() function ===', response);
 
-        let balanceOf2 = await marketplace_registry.methods.balanceOfCurrentAccount(_currentAccount).call();
+        let balanceOf2 = await stake_based_booking.methods.balanceOfCurrentAccount(_currentAccount).call();
         console.log('=== response of balanceOfCurrentAccount() / 2 ===', balanceOf2);
     }
 
     transferDAIFromUserToContract = async () => {
-        const { accounts, marketplace_registry, dai, marketplace_registry_address, web3 } = this.state;
+        const { accounts, stake_based_booking, dai, stake_based_booking_address, web3 } = this.state;
 
         //@dev - Transfer DAI from UserWallet to DAI-contract
         const _mintAmount = 1.05;  // Expected transferred value is 1.05 DAI（= 1050000000000000000 Wei）s
@@ -77,11 +77,11 @@ export default class MarketplaceRegistry extends Component {
         const decimals = 18;
         let _amount = web3.utils.toWei(mintAmount, 'ether');
         console.log('=== _amount ===', _amount);
-        const _to = marketplace_registry_address;
+        const _to = stake_based_booking_address;
         let response1 = await dai.methods.transfer(_to, _amount).send({ from: accounts[0] });
 
         //@dev - Transfer DAI from DAI-contract to Logic-contract
-        let response2 = await marketplace_registry.methods.transferDAIFromUserToContract(_amount).send({ from: accounts[0] });  // wei
+        let response2 = await stake_based_booking.methods.transferDAIFromUserToContract(_amount).send({ from: accounts[0] });  // wei
         console.log('=== response of transferDAIFromUserToContract() function ===', response2);
     }
 
@@ -89,9 +89,9 @@ export default class MarketplaceRegistry extends Component {
     //////////////////////////////////// 
     ///// Refresh Values
     ////////////////////////////////////
-    refreshValues = (instanceMarketplaceRegistry) => {
-        if (instanceMarketplaceRegistry) {
-          //console.log('refreshValues of instanceMarketplaceRegistry');
+    refreshValues = (instanceStakeBasedBooking) => {
+        if (instanceStakeBasedBooking) {
+          //console.log('refreshValues of instanceStakeBasedBooking');
         }
     }
 
@@ -112,10 +112,10 @@ export default class MarketplaceRegistry extends Component {
     componentDidMount = async () => {
         const hotLoaderDisabled = zeppelinSolidityHotLoaderOptions.disabled;
      
-        let MarketplaceRegistry = {};
+        let StakeBasedBooking = {};
         let Dai = {};
         try {
-          MarketplaceRegistry = require("../../../../build/contracts/MarketplaceRegistry.json");  // Load artifact-file of MarketplaceRegistry
+          StakeBasedBooking = require("../../../../build/contracts/StakeBasedBooking.json");  // Load artifact-file of StakeBasedBooking
           Dai = require("../../../../build/contracts/Dai.json");    //@dev - DAI（Underlying asset）
         } catch (e) {
           console.log(e);
@@ -143,24 +143,24 @@ export default class MarketplaceRegistry extends Component {
             let balance = accounts.length > 0 ? await web3.eth.getBalance(accounts[0]): web3.utils.toWei('0');
             balance = web3.utils.fromWei(balance, 'ether');
 
-            let instanceMarketplaceRegistry = null;
+            let instanceStakeBasedBooking = null;
             let deployedNetwork = null;
 
             // Create instance of contracts
-            if (MarketplaceRegistry.networks) {
-              deployedNetwork = MarketplaceRegistry.networks[networkId.toString()];
+            if (StakeBasedBooking.networks) {
+              deployedNetwork = StakeBasedBooking.networks[networkId.toString()];
               if (deployedNetwork) {
-                instanceMarketplaceRegistry = new web3.eth.Contract(
-                  MarketplaceRegistry.abi,
+                instanceStakeBasedBooking = new web3.eth.Contract(
+                  StakeBasedBooking.abi,
                   deployedNetwork && deployedNetwork.address,
                 );
-                console.log('=== instanceMarketplaceRegistry ===', instanceMarketplaceRegistry);
+                console.log('=== instanceStakeBasedBooking ===', instanceStakeBasedBooking);
               }
             }
 
             //@dev - Create instance of DAI-contract
             let instanceDai = null;
-            let MarketplaceRegistryAddress = MarketplaceRegistry.networks[networkId.toString()].address;
+            let StakeBasedBookingAddress = StakeBasedBooking.networks[networkId.toString()].address;
             //let DaiAddress = "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa"; //@dev - DAI（Kovan）
             let DaiAddress = "0xaD6D458402F60fD3Bd25163575031ACDce07538D";   //@dev - DAI（Ropsten）
             instanceDai = new web3.eth.Contract(
@@ -170,7 +170,7 @@ export default class MarketplaceRegistry extends Component {
             console.log('=== instanceDai ===', instanceDai);
 
 
-            if (MarketplaceRegistry) {
+            if (StakeBasedBooking) {
               // Set web3, accounts, and contract to the state, and then proceed with an
               // example of interacting with the contract's methods.
               this.setState({ 
@@ -182,15 +182,15 @@ export default class MarketplaceRegistry extends Component {
                 networkType, 
                 hotLoaderDisabled,
                 isMetaMask, 
-                marketplace_registry: instanceMarketplaceRegistry,
+                stake_based_booking: instanceStakeBasedBooking,
                 dai: instanceDai,
-                marketplace_registry_address: MarketplaceRegistryAddress
+                stake_based_booking_address: StakeBasedBookingAddress
               }, () => {
                 this.refreshValues(
-                  instanceMarketplaceRegistry
+                  instanceStakeBasedBooking
                 );
                 setInterval(() => {
-                  this.refreshValues(instanceMarketplaceRegistry);
+                  this.refreshValues(instanceStakeBasedBooking);
                 }, 5000);
               });
             }
@@ -209,7 +209,7 @@ export default class MarketplaceRegistry extends Component {
 
 
     render() {
-        const { accounts, marketplace_registry } = this.state;
+        const { accounts, stake_based_booking } = this.state;
 
         return (
             <div className={styles.widgets}>

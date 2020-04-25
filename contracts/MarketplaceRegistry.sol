@@ -110,12 +110,16 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
     }
 
     function getTimeframeToday() public view returns (uint _startTime, uint _endTime, uint _today) {
-        // [In proggress]: https://github.com/bokkypoobah/BokkyPooBahsDateTimeLibrary#getday
-        uint timestamp = now;
-        uint today = bokkyPooBahsDateTimeContract.getDay(timestamp);
+        uint timestampNow = now;
+        uint year;
+        uint month;
+        uint day;
+        (year, month, day) = bokkyPooBahsDateTimeContract.timestampToDate(timestampNow); //@return - i.e). 2020/04/25 
+        uint today = bokkyPooBahsDateTimeContract.timestampFromDate(year, month, day);   //@return - i.e). 1587772800 (=2020/04/25 0:00am) 
+        //uint today = bokkyPooBahsDateTimeContract.getDay(timestamp);                   //@return - i.e). 25
 
-        uint startTime = now;
-        uint endTime = now + 1 days;
+        uint startTime = today;
+        uint endTime = today + 1 days;
 
         return (startTime, endTime, today);
     }

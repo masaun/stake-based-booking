@@ -32,6 +32,18 @@ export default class MarketplaceRegistry extends Component {
     }
 
     /***
+     * @dev - Main Functions
+     **/
+    getTimeframeToday = async () => {
+        const { accounts, web3, marketplace_registry, marketplace_registry_address } = this.state;
+
+        let res = await marketplace_registry.methods.getTimeframeToday().call();
+        console.log('=== response of getTimeframeToday() ===', res);
+    }
+
+
+
+    /***
      * @dev - Test Functions
      **/
     getTestData = async () => {
@@ -215,6 +227,8 @@ export default class MarketplaceRegistry extends Component {
                             <Button size={'small'} mt={3} mb={2} onClick={this.getTestData}> Get Test Data </Button> <br />
 
                             <Button size={'small'} mt={3} mb={2} onClick={this.transferDAIFromUserToContract}> Transfer DAI From User To Contract </Button> <br />
+
+                            <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this.getTimeframeToday}> Get Timeframe Today </Button> <br />
                         </Card>
                     </Grid>
 

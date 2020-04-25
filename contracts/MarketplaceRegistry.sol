@@ -1,4 +1,4 @@
-pragma solidity ^0.5.15;
+pragma solidity ^0.5.16;
 pragma experimental ABIEncoderV2;
 
 
@@ -15,6 +15,9 @@ import "./storage/McConstants.sol";
 // DAI
 import "./DAI/dai.sol";
 
+// DateTime
+import "./lib/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeContract.sol";
+
 
 
 /***
@@ -29,10 +32,12 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
 
     Dai public dai;  //@dev - dai.sol
     IERC20 public erc20;
+    BokkyPooBahsDateTimeContract public bokkyPooBahsDateTimeContract;
 
-    constructor(address _erc20) public {
+    constructor(address _erc20, address _bokkyPooBahsDateTimeContract) public {
         dai = Dai(_erc20);
         erc20 = IERC20(_erc20);
+        bokkyPooBahsDateTimeContract = BokkyPooBahsDateTimeContract(_bokkyPooBahsDateTimeContract);
 
         daiAddress = _erc20;
     }
@@ -104,18 +109,27 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         }
     }
 
-    function getTimeframeToday() internal view returns (uint _startTime, uint _endTime) {
-        uint startTime = now;
-        uint endTime = now + 1 days;
+    function getTimeframeToday() public view returns (uint _startTime, uint _endTime, uint _today) {
+        uint timestampNow = now;
+        uint year;
+        uint month;
+        uint day;
+        (year, month, day) = bokkyPooBahsDateTimeContract.timestampToDate(timestampNow); //@return - i.e). 2020/04/25 
+        uint today = bokkyPooBahsDateTimeContract.timestampFromDate(year, month, day);   //@return - i.e). 1587772800 (=2020/04/25 0:00am) 
+        //uint today = bokkyPooBahsDateTimeContract.getDay(timestamp);                   //@return - i.e). 25
 
-        return (_startTime, _endTime);
+        uint startTime = today;
+        uint endTime = today + 1 days;
+
+        return (startTime, endTime, today);
     }
 
     function getDistributedAddress(uint _customerId) internal view returns (address distributedAddress) {
         //@dev - Time frame of today
         uint startTime;
         uint endTime;
-        (startTime, endTime) = getTimeframeToday();
+        uint today;
+        (startTime, endTime, today) = getTimeframeToday();
 
         address distributedAddress;
 
@@ -139,7 +153,8 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         //@dev - Time frame of today
         uint startTime;
         uint endTime;
-        (startTime, endTime) = getTimeframeToday();
+        uint today;
+        (startTime, endTime, today) = getTimeframeToday();
 
         uint numberOfDistributedAddress = 0;
 
@@ -162,7 +177,8 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         //@dev - Time frame of today
         uint startTime;
         uint endTime;
-        (startTime, endTime) = getTimeframeToday();
+        uint today;
+        (startTime, endTime, today) = getTimeframeToday();
 
         uint totalBookedBalanceToday;
 

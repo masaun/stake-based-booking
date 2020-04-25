@@ -5,8 +5,8 @@ pragma experimental ABIEncoderV2;
 contract McObjects {
 
     struct Customer {
-        uint customerId
-        address address;
+        uint customerId;
+        address customerAddress;
         uint amount;
         uint bookedDate;
         bool isComingShop;

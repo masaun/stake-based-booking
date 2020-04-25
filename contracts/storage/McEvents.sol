@@ -7,12 +7,18 @@ contract McEvents {
 
     event Booking(
         uint customerId,
-        address address,
+        address customerAddress,
         uint amount,
         uint bookedDate,
         bool isComingShop
     );
-    
+ 
+    event ApproveCustomerComeShop(
+        uint customerId, 
+        bool isComingShop, 
+        uint comingTime
+    );
+
 
     event _TransferFrom(
         address from,

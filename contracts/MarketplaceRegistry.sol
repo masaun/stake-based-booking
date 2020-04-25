@@ -55,13 +55,13 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
     function booking(uint _amount, uint _bookedDate) public returns (bool) {
         Customer storage customer = customers[currentCustomerId];
         customer.customerId = currentCustomerId;
-        customer.address = msg.sender;
+        customer.customerAddress = msg.sender;
         customer.bookedDate = _bookedDate;
         customer.amount = _amount;
         customer.isComingShop = false;
 
         emit Booking(customer.customerId, 
-                     customer.address, 
+                     customer.customerAddress, 
                      customer.amount, 
                      customer.bookedDate,
                      customer.isComingShop);
@@ -77,7 +77,7 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         customer.isComingShop = true;
         customer.comingTime = now;
 
-        emit approveCustomerComeShop(_customerId, 
+        emit ApproveCustomerComeShop(_customerId, 
                                      customer.isComingShop, 
                                      customer.comingTime);
     }
@@ -98,7 +98,7 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         (startTime, endTime) = getTimeframeToday();
 
         //@dev - Actual time when booked customer came
-        address[] _distributedAddressList = getDistributedAddress();
+        address[] memory _distributedAddressList = getDistributedAddress();
 
         //@dev - Get tatal balance which booked date is today
         uint _totalBookedBalanceToday = getTotalBookedBalanceToday();
@@ -108,31 +108,36 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
 
         //@dev - Execute distribution 
         for (uint i=0; i < _distributedAddressList.length; i++) {
-            to = _distributedAddressList[i];
+            address to = _distributedAddressList[i];
             erc20.transfer(to, distributedAmountPerOneAddress);
         }
     }
 
     function getTimeframeToday() internal view returns (uint _startTime, uint _endTime) {
-        uint _startTime = now;
-        uint _endTime = now + 1 days;
+        uint startTime = now;
+        uint endTime = now + 1 days;
 
         return (_startTime, _endTime);
     }
 
-    function getDistributedAddress() internal view returns (address[] _distributedAddressList) {
-        address[] distributedAddressList;
+    function getDistributedAddress() internal view returns (address[] memory _distributedAddressList) {
+        //@dev - Time frame of today
+        uint startTime;
+        uint endTime;
+        (startTime, endTime) = getTimeframeToday();
+
+        address[] memory distributedAddressList;
 
         //@dev - Actual time when booked customer came
         for (uint i=1; i <= currentCustomerId; i++) {
             Customer memory customer = customers[i];
-            address _address = customer.address;
+            address _customerAddress = customer.customerAddress;
             bool _isComingShop = customer.isComingShop;
             uint _comingTime = customer.comingTime;
 
             if (_isComingShop == true) {
                 if (startTime <= _comingTime <= endTime) {
-                    distributedAddressList.push(_address);
+                    distributedAddressList.push(_customerAddress);
                 }
             }
         }
@@ -141,11 +146,16 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
     }
     
     function getTotalBookedBalanceToday() internal view returns (uint _totalBookedBalanceToday) {
+        //@dev - Time frame of today
+        uint startTime;
+        uint endTime;
+        (startTime, endTime) = getTimeframeToday();
+
         uint totalBookedBalanceToday;
 
         for (uint i=1; i <= currentCustomerId; i++) {
             Customer memory customer = customers[i];
-            address _address = customer.address;
+            address _customerAddress = customer.customerAddress;
             bool _isComingShop = customer.isComingShop;
             uint _comingTime = customer.comingTime;
             uint _amount = customer.amount;

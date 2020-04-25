@@ -109,19 +109,23 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         }
     }
 
-    function getTimeframeToday() internal view returns (uint _startTime, uint _endTime) {
+    function getTimeframeToday() public view returns (uint _startTime, uint _endTime, uint _today) {
         // [In proggress]: https://github.com/bokkypoobah/BokkyPooBahsDateTimeLibrary#getday
+        uint timestamp = now;
+        uint today = bokkyPooBahsDateTimeContract.getDay(timestamp);
+
         uint startTime = now;
         uint endTime = now + 1 days;
 
-        return (_startTime, _endTime);
+        return (startTime, endTime, today);
     }
 
     function getDistributedAddress(uint _customerId) internal view returns (address distributedAddress) {
         //@dev - Time frame of today
         uint startTime;
         uint endTime;
-        (startTime, endTime) = getTimeframeToday();
+        uint today;
+        (startTime, endTime, today) = getTimeframeToday();
 
         address distributedAddress;
 
@@ -145,7 +149,8 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         //@dev - Time frame of today
         uint startTime;
         uint endTime;
-        (startTime, endTime) = getTimeframeToday();
+        uint today;
+        (startTime, endTime, today) = getTimeframeToday();
 
         uint numberOfDistributedAddress = 0;
 
@@ -168,7 +173,8 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         //@dev - Time frame of today
         uint startTime;
         uint endTime;
-        (startTime, endTime) = getTimeframeToday();
+        uint today;
+        (startTime, endTime, today) = getTimeframeToday();
 
         uint totalBookedBalanceToday;
 

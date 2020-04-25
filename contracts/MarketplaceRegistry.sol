@@ -173,6 +173,11 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
     
 
     function getNumberOfDistributedAddress() internal view returns (uint _numberOfDistributedAddress) {
+        //@dev - Time frame of today
+        uint startTime;
+        uint endTime;
+        (startTime, endTime) = getTimeframeToday();
+
         uint numberOfDistributedAddress = 0;
 
         for (uint i=1; i <= currentCustomerId; i++) {

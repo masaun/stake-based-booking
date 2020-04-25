@@ -59,8 +59,8 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
 
         address _owner = address(this); //@dev - contract address which do delegate call
         //address _owner = msg.sender;
-        address _spender = 0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa;    // DAI address on Kovan
-        //address _spender = 0x462303f77a3f17Dbd95eb7bab412FE4937F9B9CB;  // rDAI-proxy
+        address _spender = 0xaD6D458402F60fD3Bd25163575031ACDce07538D;    // DAI address on Ropsten
+        //address _spender = 0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa;    // DAI address on Kovan
 
         //@dev - Allow _spender to withdraw from your account, multiple times, up to the _value amount. 
         erc20.approve(_spender, _mintAmount.mul(10**18));
@@ -85,12 +85,19 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         address _from = address(this);
         address _to = 0x8Fc9d07b1B9542A71C4ba1702Cd230E160af6EB3;
 
-        erc20.approve(daiAddress, _mintAmount.mul(10**18));
+        erc20.approve(daiAddress, _mintAmount);
         uint256 _allowanceAmount = erc20.allowance(address(this), daiAddress);
 
-        erc20.transferFrom(_from, _to, _mintAmount.mul(10**18).div(10**2));
+        erc20.transferFrom(_from, _to, _mintAmount);
 
-        emit _TransferFrom(_from, _to, _mintAmount.mul(10**18), _allowanceAmount);
+        emit _TransferFrom(_from, _to, _mintAmount, _allowanceAmount);
+
+        // erc20.approve(daiAddress, _mintAmount.mul(10**18));
+        // uint256 _allowanceAmount = erc20.allowance(address(this), daiAddress);
+
+        // erc20.transferFrom(_from, _to, _mintAmount.mul(10**18).div(10**2));
+
+        // emit _TransferFrom(_from, _to, _mintAmount.mul(10**18), _allowanceAmount);
     }
     
 }

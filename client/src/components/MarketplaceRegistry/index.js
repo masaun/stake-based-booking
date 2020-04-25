@@ -142,7 +142,8 @@ export default class MarketplaceRegistry extends Component {
             //@dev - Create instance of DAI-contract
             let instanceDai = null;
             let MarketplaceRegistryAddress = MarketplaceRegistry.networks[networkId.toString()].address;
-            let DaiAddress = "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa"; //@dev - DAI（Kovan）
+            //let DaiAddress = "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa"; //@dev - DAI（Kovan）
+            let DaiAddress = "0xaD6D458402F60fD3Bd25163575031ACDce07538D";   //@dev - DAI（Ropsten）
             instanceDai = new web3.eth.Contract(
               Dai.abi,
               DaiAddress,

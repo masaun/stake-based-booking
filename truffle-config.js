@@ -27,6 +27,22 @@ module.exports = {
       timeoutBlocks: 50,   // # of blocks before a deployment times out  (minimum/default: 50)
       skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     },
+    ropsten: {
+      provider: function() {
+        return new HDWalletProvider(
+          mnemonic, 
+          process.env.RPC_URL_ROPSTEN,
+          0,    // address_index
+          10,   // num_addresses
+          true  // shareNonce
+        )
+      },
+      network_id: 3, // Kovan's id
+      //gas: 7017622,
+      //confirmations: 2,  // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 50,   // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    },
     coverage: {
       host: "localhost",
       network_id: "*",

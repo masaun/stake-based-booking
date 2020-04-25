@@ -5,7 +5,8 @@ var IERC20 = artifacts.require("IERC20");
 var tokenAddressList = require('./tokenAddress/tokenAddress.js');
 var contractAddressList = require('./contractAddress/contractAddress.js');
 
-const _erc20 = tokenAddressList["Kovan"]["DAI"];  // DAI address on Kovan
+//const _erc20 = tokenAddressList["Kovan"]["DAI"];  // DAI address on Kovan
+const _erc20 = tokenAddressList["Ropsten"]["DAI"];  // DAI address on Ropsten
 
 const depositedAmount = web3.utils.toWei("2.1");    // 2.1 DAI which is deposited in deployed contract. 
 

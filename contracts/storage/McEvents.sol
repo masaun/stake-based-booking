@@ -5,6 +5,21 @@ import "./McObjects.sol";
 
 contract McEvents {
 
+    event Booking(
+        uint customerId,
+        address customerAddress,
+        uint amount,
+        uint bookedDate,
+        bool isComingShop
+    );
+ 
+    event ApproveCustomerComeShop(
+        uint customerId, 
+        bool isComingShop, 
+        uint comingTime
+    );
+
+
     event _TransferFrom(
         address from,
         address to,

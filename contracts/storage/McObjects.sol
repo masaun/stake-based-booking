@@ -4,6 +4,17 @@ pragma experimental ABIEncoderV2;
 
 contract McObjects {
 
+    struct Customer {
+        uint customerId;
+        address customerAddress;
+        uint amount;
+        uint bookedDate;
+        bool isComingShop;
+        uint comingTime;       
+    }
+    
+
+
     enum ExampleType { TypeA, TypeB, TypeC }
 
     struct ExampleObject {

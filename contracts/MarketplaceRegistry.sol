@@ -88,10 +88,10 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
     function registerLocalOrganization() public returns (bool) {}
 
     /***
-     * @dev - Destribute pooled money
+     * @dev - Distribute pooled money
      *      - The period for tally and executing distribution is 24:00 every day
      **/
-    function destributePooledMoney() public returns (bool) {
+    function distributePooledMoney() public returns (bool) {
         //@dev - Time frame of today
         uint startTime;
         uint endTime;
@@ -102,6 +102,15 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
 
         //@dev - Get tatal balance which booked date is today
         uint _totalBookedBalanceToday = getTotalBookedBalanceToday();
+
+        //@dev - Calculate distributed amount per 1 address
+        uint distributedAmountPerOneAddress = _totalBookedBalanceToday.div(_distributedAddressList.length);
+
+        //@dev - Execute distribution 
+        for (uint i=0; i < _distributedAddressList.length; i++) {
+            to = _distributedAddressList[i];
+            erc20.transfer(to, distributedAmountPerOneAddress);
+        }
     }
 
     function getTimeframeToday() internal view returns (uint _startTime, uint _endTime) {

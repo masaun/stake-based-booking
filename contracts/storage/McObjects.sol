@@ -8,7 +8,9 @@ contract McObjects {
         uint customerId
         address address;
         uint amount;
-        bool isComingShop;        
+        uint bookedDate;
+        bool isComingShop;
+        uint comingTime;       
     }
     
 

@@ -52,16 +52,18 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
     /***
      * @dev - Stake DAI when customr book
      **/
-    function booking(uint256 _amount) public returns (bool) {
+    function booking(uint _amount, uint _bookedDate) public returns (bool) {
         Customer storage customer = customers[currentCustomerId];
         customer.customerId = currentCustomerId;
         customer.address = msg.sender;
+        customer.bookedDate = _bookedDate;
         customer.amount = _amount;
         customer.isComingShop = false;
 
         emit Booking(customer.customerId, 
                      customer.address, 
                      customer.amount, 
+                     customer.bookedDate,
                      customer.isComingShop);
 
         currentCustomerId++;
@@ -71,8 +73,13 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
      * @dev - Check whether booked customer come or not
      **/
     function approveCustomerComeShop(uint _customerId) public returns (bool) {
-        Customer storage customer = customers[currentCustomerId];
+        Customer storage customer = customers[_customerId];
         customer.isComingShop = true;
+        customer.comingTime = now;
+
+        emit approveCustomerComeShop(_customerId, 
+                                     customer.isComingShop, 
+                                     customer.comingTime);
     }
     
     /***
@@ -84,7 +91,65 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
      * @dev - Destribute pooled money
      *      - The period for tally and executing distribution is 24:00 every day
      **/
-    function destributePooledMoney() public returns (bool) {}
+    function destributePooledMoney() public returns (bool) {
+        //@dev - Time frame of today
+        uint startTime;
+        uint endTime;
+        (startTime, endTime) = getTimeframeToday();
+
+        //@dev - Actual time when booked customer came
+        address[] _distributedAddressList = getDistributedAddress();
+
+        //@dev - Get tatal balance which booked date is today
+        uint _totalBookedBalanceToday = getTotalBookedBalanceToday();
+    }
+
+    function getTimeframeToday() internal view returns (uint _startTime, uint _endTime) {
+        uint _startTime = now;
+        uint _endTime = now + 1 days;
+
+        return (_startTime, _endTime);
+    }
+
+    function getDistributedAddress() internal view returns (address[] _distributedAddressList) {
+        address[] distributedAddressList;
+
+        //@dev - Actual time when booked customer came
+        for (uint i=1; i <= currentCustomerId; i++) {
+            Customer memory customer = customers[i];
+            address _address = customer.address;
+            bool _isComingShop = customer.isComingShop;
+            uint _comingTime = customer.comingTime;
+
+            if (_isComingShop == true) {
+                if (startTime <= _comingTime <= endTime) {
+                    distributedAddressList.push(_address);
+                }
+            }
+        }
+
+        return distributedAddressList;
+    }
+    
+    function getTotalBookedBalanceToday() internal view returns (uint _totalBookedBalanceToday) {
+        uint totalBookedBalanceToday;
+
+        for (uint i=1; i <= currentCustomerId; i++) {
+            Customer memory customer = customers[i];
+            address _address = customer.address;
+            bool _isComingShop = customer.isComingShop;
+            uint _comingTime = customer.comingTime;
+            uint _amount = customer.amount;
+
+            if (_isComingShop == true) {
+                if (startTime <= _comingTime <= endTime) {
+                    totalBookedBalanceToday.add(_amount);
+                }
+            }
+        }
+
+        return totalBookedBalanceToday;
+    }
 
 
 

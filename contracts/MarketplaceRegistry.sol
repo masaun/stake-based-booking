@@ -15,10 +15,6 @@ import "./storage/McConstants.sol";
 // DAI
 import "./DAI/dai.sol";
 
-// Mexa
-// import "./mexa/contracts/RelayHub.sol";
-// import "./mexa/contracts/RelayerManager.sol";
-
 
 
 /***
@@ -92,14 +88,6 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
      *      - The period for tally and executing distribution is 24:00 every day
      **/
     function distributePooledMoney() public returns (bool) {
-        //@dev - Time frame of today
-        uint startTime;
-        uint endTime;
-        (startTime, endTime) = getTimeframeToday();
-
-        //@dev - Actual time when booked customer came
-        //address[] memory _distributedAddressList = getDistributedAddress();
-
         //@dev - Get tatal balance which booked date is today
         uint _totalBookedBalanceToday = getTotalBookedBalanceToday();
 
@@ -107,17 +95,8 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         uint _numberOfDistributedAddress = getNumberOfDistributedAddress();
         uint distributedAmountPerOneAddress = _totalBookedBalanceToday.div(_numberOfDistributedAddress);
 
-        //@dev - Execute distribution 
-        // uint i = 1;
-        // while (i <= currentCustomerId) {
-        //     //address _distributedAddress = getDistributedAddress(i);
-        //     if (getDistributedAddress(i) != address(0)) {
-        //
-        //     }
-        // } 
-
+        //@dev - Execute distribution
         for (uint i=1; i <= currentCustomerId; i++) {
-            //address _distributedAddress = getDistributedAddress(i);
             if (getDistributedAddress(i) != address(0)) {
                 address to = getDistributedAddress(i);
                 erc20.transfer(to, distributedAmountPerOneAddress);
@@ -139,7 +118,6 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         (startTime, endTime) = getTimeframeToday();
 
         address distributedAddress;
-        //address[] memory distributedAddressList;
 
         //@dev - Actual time when booked customer came
         Customer memory customer = customers[_customerId];
@@ -153,22 +131,7 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
             }
         }
 
-        //@dev - Actual time when booked customer came
-        // for (uint i=1; i <= currentCustomerId; i++) {
-        //     Customer memory customer = customers[i];
-        //     address _customerAddress = customer.customerAddress;
-        //     bool _isComingShop = customer.isComingShop;
-        //     uint _comingTime = customer.comingTime;
-
-        //     if (_isComingShop == true) {
-        //         if (startTime <= _comingTime && _comingTime <= endTime) {
-        //             distributedAddressList.push(_customerAddress);
-        //         }
-        //     }
-        // }
-
         return distributedAddress;
-        //return distributedAddressList;
     }
     
 

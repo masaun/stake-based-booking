@@ -105,6 +105,7 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
     }
 
     function getTimeframeToday() internal view returns (uint _startTime, uint _endTime) {
+        // [In proggress]: https://github.com/bokkypoobah/BokkyPooBahsDateTimeLibrary#getday
         uint startTime = now;
         uint endTime = now + 1 days;
 

@@ -27,6 +27,8 @@ import "./DAI/dai.sol";
 contract MarketplaceRegistry is Ownable, McStorage, McConstants {
     using SafeMath for uint;
 
+    uint currentCustomerId = 1;
+
     address daiAddress;
 
     Dai public dai;  //@dev - dai.sol
@@ -50,7 +52,20 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
     /***
      * @dev - Stake DAI when customr book
      **/
-    function booking(address _customer, uint256 _amount) public returns (bool) {}
+    function booking(uint256 _amount) public returns (bool) {
+        Customer public customer = customers[currentCustomerId];
+        customer.customerId = currentCustomerId;
+        customer.address = msg.sender;
+        customer.amount = _amount;
+        customer.isComingShop = false;
+
+        emit Booking(customer.customerId, 
+                     customer.address, 
+                     customer.amount, 
+                     customer.isComingShop);
+
+        currentCustomerId++;
+    }
     
     /***
      * @dev - Check whether booked customer come or not

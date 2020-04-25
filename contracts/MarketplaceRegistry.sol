@@ -104,18 +104,25 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         uint _totalBookedBalanceToday = getTotalBookedBalanceToday();
 
         //@dev - Calculate distributed amount per 1 address
-        uint distributedAmountPerOneAddress = _totalBookedBalanceToday.div(_distributedAddressList.length);
+        uint _numberOfDistributedAddress = getNumberOfDistributedAddress();
+        uint distributedAmountPerOneAddress = _totalBookedBalanceToday.div(_numberOfDistributedAddress);
 
         //@dev - Execute distribution 
-        uint i = 1;
-        while (i <= currentCustomerId) {
-            address _distributedAddress = getDistributedAddress(i);
-            erc20.transfer(_distributedAddress, distributedAmountPerOneAddress);
-        } 
-        // for (uint i=0; i < _distributedAddressList.length; i++) {
-        //     address to = _distributedAddressList[i];
-        //     erc20.transfer(to, distributedAmountPerOneAddress);
-        // }
+        // uint i = 1;
+        // while (i <= currentCustomerId) {
+        //     //address _distributedAddress = getDistributedAddress(i);
+        //     if (getDistributedAddress(i) != address(0)) {
+        //
+        //     }
+        // } 
+
+        for (uint i=1; i <= currentCustomerId; i++) {
+            //address _distributedAddress = getDistributedAddress(i);
+            if (getDistributedAddress(i) != address(0)) {
+                address to = getDistributedAddress(i);
+                erc20.transfer(to, distributedAmountPerOneAddress);
+            }
+        }
     }
 
     function getTimeframeToday() internal view returns (uint _startTime, uint _endTime) {
@@ -125,7 +132,7 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         return (_startTime, _endTime);
     }
 
-    function getDistributedAddress(uint _customerId) internal view returns (address memory _distributedAddress) {
+    function getDistributedAddress(uint _customerId) internal view returns (address distributedAddress) {
         //@dev - Time frame of today
         uint startTime;
         uint endTime;
@@ -164,6 +171,25 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         //return distributedAddressList;
     }
     
+
+    function getNumberOfDistributedAddress() internal view returns (uint _numberOfDistributedAddress) {
+        uint numberOfDistributedAddress = 0;
+
+        for (uint i=1; i <= currentCustomerId; i++) {
+            Customer memory customer = customers[i];
+            address _customerAddress = customer.customerAddress;
+            bool _isComingShop = customer.isComingShop;
+            uint _comingTime = customer.comingTime;
+
+            if (_isComingShop == true) {
+                if (startTime <= _comingTime && _comingTime <= endTime) {
+                    numberOfDistributedAddress++;
+                }
+            }
+        }
+    }
+    
+
     function getTotalBookedBalanceToday() internal view returns (uint _totalBookedBalanceToday) {
         //@dev - Time frame of today
         uint startTime;

@@ -13,7 +13,10 @@ contract SbObjects {
         uint comingTime;       
     }
     
-
+    struct LocalOrganization {
+        address localOrganizationAddress;
+    }
+    
 
     enum ExampleType { TypeA, TypeB, TypeC }
 

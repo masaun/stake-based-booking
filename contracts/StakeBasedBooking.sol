@@ -86,7 +86,15 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
     /***
      * @dev - Local Organization (Local NGO/NPO, etc...) register to donationList
      **/
-    function registerLocalOrganization() public returns (bool) {}
+    function registerLocalOrganization(address _localOrganizationAddress) public returns (bool) {
+        LocalOrganization memory localOrganization = LocalOrganization({
+            localOrganizationAddress: _localOrganizationAddress
+        });
+        localOrganizations.push(localOrganization);
+
+        emit RegisterLocalOrganization(localOrganization.localOrganizationAddress);
+    }
+
 
 
     /***

@@ -19,12 +19,16 @@ contract SbEvents {
         uint comingTime
     );
 
+    event RegisterLocalOrganization(
+        address localOrganizationAddress
+    );
+
     event DistributePooledMoney(
         uint totalBookedBalanceToday, 
         uint numberOfDistributedAddress,
         uint distributedAmountPerOneAddress
     );
-    
+
 
 
     event _TransferFrom(

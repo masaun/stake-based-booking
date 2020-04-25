@@ -7,11 +7,14 @@ var contractAddressList = require('./contractAddress/contractAddress.js');
 
 //const _erc20 = tokenAddressList["Kovan"]["DAI"];  // DAI address on Kovan
 const _erc20 = tokenAddressList["Ropsten"]["DAI"];  // DAI address on Ropsten
+const _bokkyPooBahsDateTimeContract = contractAddressList["Ropten"]["BokkyPooBahsDateTimeLibrary"]["BokkyPooBahsDateTimeContract"];
 
 const depositedAmount = web3.utils.toWei("2.1");    // 2.1 DAI which is deposited in deployed contract. 
 
 module.exports = async function(deployer, network, accounts) {
-    await deployer.deploy(MarketplaceRegistry, _erc20);
+    await deployer.deploy(MarketplaceRegistry, 
+                          _erc20, 
+                          _bokkyPooBahsDateTimeContract);
 
     const marketplaceRegistry = await MarketplaceRegistry.deployed();
 

@@ -15,6 +15,9 @@ import "./storage/McConstants.sol";
 // DAI
 import "./DAI/dai.sol";
 
+// DateTime
+import "./lib/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeContract.sol";
+
 
 
 /***
@@ -29,10 +32,12 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
 
     Dai public dai;  //@dev - dai.sol
     IERC20 public erc20;
+    BokkyPooBahsDateTimeContract public bokkyPooBahsDateTimeContract;
 
-    constructor(address _erc20) public {
+    constructor(address _erc20, address _bokkyPooBahsDateTimeContract) public {
         dai = Dai(_erc20);
         erc20 = IERC20(_erc20);
+        bokkyPooBahsDateTimeContract = BokkyPooBahsDateTimeContract(_bokkyPooBahsDateTimeContract);
 
         daiAddress = _erc20;
     }

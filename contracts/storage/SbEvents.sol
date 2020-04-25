@@ -21,7 +21,7 @@ contract SbEvents {
 
     event DistributePooledMoney(
         uint totalBookedBalanceToday, 
-        address numberOfDistributedAddress,
+        uint numberOfDistributedAddress,
         uint distributedAmountPerOneAddress
     );
     

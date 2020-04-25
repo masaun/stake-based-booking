@@ -84,9 +84,10 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
     }
     
     /***
-     * @dev - Local Organization register to donationList
+     * @dev - Local Organization (Local NGO/NPO, etc...) register to donationList
      **/
     function registerLocalOrganization() public returns (bool) {}
+
 
     /***
      * @dev - Distribute pooled money
@@ -111,6 +112,10 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
         emit DistributePooledMoney(_totalBookedBalanceToday, _numberOfDistributedAddress, distributedAmountPerOneAddress);
     }
 
+
+    /************************************
+     * @dev - Internal functions
+     ************************************/
     function getTimeframeToday() public view returns (uint _startTime, uint _endTime, uint _today) {
         uint timestampNow = now;
         uint year;
@@ -149,7 +154,6 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
 
         return distributedAddress;
     }
-    
 
     function getNumberOfDistributedAddress() internal view returns (uint _numberOfDistributedAddress) {
         //@dev - Time frame of today
@@ -173,7 +177,6 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
             }
         }
     }
-    
 
     function getTotalBookedBalanceToday() internal view returns (uint _totalBookedBalanceToday) {
         //@dev - Time frame of today

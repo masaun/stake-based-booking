@@ -107,6 +107,8 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
                 erc20.transfer(to, distributedAmountPerOneAddress);
             }
         }
+
+        emit DistributePooledMoney(_totalBookedBalanceToday, _numberOfDistributedAddress, distributedAmountPerOneAddress);
     }
 
     function getTimeframeToday() public view returns (uint _startTime, uint _endTime, uint _today) {

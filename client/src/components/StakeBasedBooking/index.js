@@ -167,7 +167,7 @@ export default class StakeBasedBooking extends Component {
 
 
     /***
-     * @dev - Test Functions
+     * @dev - Getter Functions
      **/
     getTimeframeToday = async () => {
         const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
@@ -175,6 +175,14 @@ export default class StakeBasedBooking extends Component {
         let res = await stake_based_booking.methods.getTimeframeToday().call();
         console.log('=== response of getTimeframeToday() ===', res);
     }
+
+    _getCurrentCustomerId = async () => {
+        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
+
+        let res = await stake_based_booking.methods.getCurrentCustomerId().call();
+        console.log('=== response of getCurrentCustomerId() ===', res);
+    }
+
 
 
     /***
@@ -493,6 +501,8 @@ export default class StakeBasedBooking extends Component {
                             <Button size={'small'} mt={3} mb={2} onClick={this.transferDAIFromUserToContract}> Transfer DAI From User To Contract </Button> <br />
 
                             <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this.getTimeframeToday}> Get Timeframe Today </Button> <br />
+
+                            <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this._getCurrentCustomerId}> Get Current Customer Id </Button> <br />
 
                             <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this._getNumberOfDistributedAddress}> Get Number Of Distributed Addresses </Button> <br />
                         </Card>

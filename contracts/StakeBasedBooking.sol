@@ -242,6 +242,13 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
     }
 
 
+    /************************************
+     * @dev - Getter functions
+     ************************************/
+    function getCurrentCustomerId() public view returns (uint _currentCustomerId) {
+        return currentCustomerId;
+    }
+    
 
 
 

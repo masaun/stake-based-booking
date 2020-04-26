@@ -189,7 +189,7 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
         return distributedAddress;
     }
 
-    function getNumberOfDistributedAddress() internal view returns (uint _numberOfDistributedAddress) {
+    function getNumberOfDistributedAddress() public view returns (uint _numberOfDistributedAddress) {
         //@dev - Time frame of today
         uint startTime;
         uint endTime;

@@ -36,6 +36,7 @@ export default class StakeBasedBooking extends Component {
         this._distributePooledMoney = this._distributePooledMoney.bind(this);
 
         this.getTestData = this.getTestData.bind(this);
+        this._getNumberOfDistributedAddress = this._getNumberOfDistributedAddress.bind(this);
     }
 
     /***
@@ -139,6 +140,13 @@ export default class StakeBasedBooking extends Component {
         //@dev - Transfer DAI from DAI-contract to Logic-contract
         let response2 = await stake_based_booking.methods.transferDAIFromUserToContract(_amount).send({ from: accounts[0] });  // wei
         console.log('=== response of transferDAIFromUserToContract() function ===', response2);
+    }
+
+    _getNumberOfDistributedAddress = async () => {
+        const { accounts, stake_based_booking, dai, stake_based_booking_address, web3 } = this.state;
+
+        let res = await stake_based_booking.methods.getNumberOfDistributedAddress().call();  // wei
+        console.log('=== response of getNumberOfDistributedAddress() function ===', res);
     }
 
 
@@ -321,6 +329,8 @@ export default class StakeBasedBooking extends Component {
                             <Button size={'small'} mt={3} mb={2} onClick={this.transferDAIFromUserToContract}> Transfer DAI From User To Contract </Button> <br />
 
                             <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this.getTimeframeToday}> Get Timeframe Today </Button> <br />
+
+                            <Button mainColor="DarkCyan" size={'small'} mt={3} mb={2} onClick={this._getNumberOfDistributedAddress}> Get Number Of Distributed Addresses </Button> <br />
                         </Card>
                     </Grid>
 

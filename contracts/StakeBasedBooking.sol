@@ -49,6 +49,33 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
      * DonatedOrganization
      **/
 
+    /***
+     * @dev - Register Local Shop here
+     **/
+    function registerLocalShop(string memory _localShopName, address _localShopAddress) public returns (bool) {
+        LocalShop memory localShop = LocalShop({
+            localShopName: _localShopName,
+            localShopAddress: _localShopAddress
+        });
+        localShops.push(localShop);
+
+        emit RegisterLocalShop(localShop.localShopName,
+                               localShop.localShopAddress);
+    }
+     
+    /***
+     * @dev - Register Local Organization (Local NGO/NPO, etc...) to donationList
+     **/
+    function registerLocalOrganization(string memory _localOrganizationName, address _localOrganizationAddress) public returns (bool) {
+        LocalOrganization memory localOrganization = LocalOrganization({
+            localOrganizationName: _localOrganizationName,
+            localOrganizationAddress: _localOrganizationAddress
+        });
+        localOrganizations.push(localOrganization);
+
+        emit RegisterLocalOrganization(localOrganization.localOrganizationName,
+                                       localOrganization.localOrganizationAddress);
+    }
 
     /***
      * @dev - Stake DAI when customr book
@@ -82,22 +109,6 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
                                      customer.isComingShop, 
                                      customer.comingTime);
     }
-    
-    /***
-     * @dev - Local Organization (Local NGO/NPO, etc...) register to donationList
-     **/
-    function registerLocalOrganization(string memory _localOrganizationName, address _localOrganizationAddress) public returns (bool) {
-        LocalOrganization memory localOrganization = LocalOrganization({
-            localOrganizationName: _localOrganizationName,
-            localOrganizationAddress: _localOrganizationAddress
-        });
-        localOrganizations.push(localOrganization);
-
-        emit RegisterLocalOrganization(localOrganization.localOrganizationName,
-                                       localOrganization.localOrganizationAddress);
-    }
-
-
 
     /***
      * @dev - Distribute pooled money

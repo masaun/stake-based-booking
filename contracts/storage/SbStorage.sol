@@ -21,6 +21,9 @@ contract SbStorage is SbObjects, SbEvents {
     
     LocalOrganization[] public localOrganizations;
 
+    LocalShop[] public localShops;
+  
+
     ExampleObject[] public exampleObjects;
 
     mapping (uint256 => Sample) samples;

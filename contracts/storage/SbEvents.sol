@@ -19,6 +19,11 @@ contract SbEvents {
         uint comingTime
     );
 
+    event RegisterLocalShop(
+        string localShopName,
+        address localShopAddress
+    );
+
     event RegisterLocalOrganization(
         string localOrganizationName,
         address localOrganizationAddress

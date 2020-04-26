@@ -31,6 +31,7 @@ export default class StakeBasedBooking extends Component {
 
         this._booking = this._booking.bind(this);
         this._approveCustomerComeShop = this._approveCustomerComeShop.bind(this);
+        this._registerShop = this._registerLocalShop.bind(this);
         this._registerLocalOrganization = this._registerLocalOrganization.bind(this);
         this._distributePooledMoney = this._distributePooledMoney.bind(this);
 
@@ -44,7 +45,7 @@ export default class StakeBasedBooking extends Component {
         const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
         const _amount = 1.152;  // 1.152 DAI
         const payAmount = web3.utils.toWei(`${_amount}`, 'ether');
-        const _bookedDate = 1588086000;  // April 28, 2020 3:00:00 PM (GMT)
+        const _bookedDate = 1587868230;  // April 26, 2020 2:30:30 AM (GMT)
         let res = await stake_based_booking.methods.booking(payAmount, _bookedDate).send({ from: accounts[0] });
         console.log('=== response of booking() ===', res);
     }
@@ -56,11 +57,20 @@ export default class StakeBasedBooking extends Component {
         console.log('=== response of approveCustomerComeShop() ===', res);        
     }    
 
+    _registerLocalShop = async () => {
+        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
+
+        const _localShopName = "Test Shop 1"
+        const _localShopAddress = walletAddressList["LocalShops"]["walletAddress1"];
+        let res = await stake_based_booking.methods.registerLocalShop(_localShopName, _localShopAddress).send({ from: accounts[0] });
+        console.log('=== response of registerLocalShop() ===', res);        
+    } 
+
     _registerLocalOrganization = async () => {
         const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
 
         const _localOrganizationName = "Test Organization 1"
-        const _localOrganizationAddress = walletAddressList["organizations"]["walletAddress1"];
+        const _localOrganizationAddress = walletAddressList["LocalOrganizations"]["walletAddress1"];
         let res = await stake_based_booking.methods.registerLocalOrganization(_localOrganizationName, _localOrganizationAddress).send({ from: accounts[0] });
         console.log('=== response of registerLocalOrganization() ===', res);        
     }    
@@ -252,10 +262,6 @@ export default class StakeBasedBooking extends Component {
     render() {
         const { accounts, stake_based_booking } = this.state;
 
-        this._approveCustomerComeShop = this._approveCustomerComeShop.bind(this);
-        this._registerLocalOrganization = this._registerLocalOrganization.bind(this);
-        this._distributePooledMoney = this._distributePooledMoney.bind(this);
-
         return (
             <div className={styles.widgets}>
                 <Grid container style={{ marginTop: 32 }}>
@@ -272,6 +278,8 @@ export default class StakeBasedBooking extends Component {
                             <Button size={'small'} mt={3} mb={2} onClick={this._booking}> Booking </Button> <br />
 
                             <Button size={'small'} mt={3} mb={2} onClick={this._approveCustomerComeShop}> Approve thing that Customer Come Shop </Button> <br />
+
+                            <Button size={'small'} mt={3} mb={2} onClick={this._registerLocalShop}> Register Local Shop </Button> <br />
 
                             <Button size={'small'} mt={3} mb={2} onClick={this._registerLocalOrganization}> Register Local Organization </Button> <br />
 

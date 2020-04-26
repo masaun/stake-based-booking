@@ -13,6 +13,11 @@ contract SbObjects {
         uint comingTime;       
     }
     
+    struct LocalShop {
+        string localShopName;
+        address localShopAddress;
+    }    
+
     struct LocalOrganization {
         string localOrganizationName;
         address localOrganizationAddress;

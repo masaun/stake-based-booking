@@ -37,6 +37,20 @@ export default class StakeBasedBooking extends Component {
 
         this.getTestData = this.getTestData.bind(this);
         this._getNumberOfDistributedAddress = this._getNumberOfDistributedAddress.bind(this);
+
+        this.handleInputLocalShopName = this.handleInputLocalShopName.bind(this);
+        this.handleInputLocalShopAddress = this.handleInputLocalShopAddress.bind(this);
+
+        this.handleInputLocalOrganizationName = this.handleInputLocalOrganizationName.bind(this);
+        this.handleInputLocalOrganizationAddress = this.handleInputLocalOrganizationAddress.bind(this);
+
+        this.handleInputBookedShopId = this.handleInputBookedShopId.bind(this);
+        this.handleInputBookedDateYear = this.handleInputBookedDateYear.bind(this);
+        this.handleInputBookedDateMonth = this.handleInputBookedDateMonth.bind(this);
+        this.handleInputBookedDateDay = this.handleInputBookedDateDay.bind(this);
+        this.handleInputPayAmount = this.handleInputPayAmount.bind(this);
+
+        this.handleInputApproveCustomerId = this.handleInputApproveCustomerId.bind(this);
     }
 
     handleInputLocalShopName({ target: { value } }) {
@@ -396,7 +410,7 @@ export default class StakeBasedBooking extends Component {
                             <Table>
                                 <tr>
                                     <td>Booked Shop Id</td>
-                                    <td><Input type="text" placeholder="Please input Booked Shop Id" value={this.state.valueOfLBookedShopId} onChange={this.handleInputBookedShopId} /></td>
+                                    <td><Input type="text" placeholder="Please input Booked Shop Id" value={this.state.valueOfBookedShopId} onChange={this.handleInputBookedShopId} /></td>
                                     <td></td>
                                     <td></td>
                                 </tr>

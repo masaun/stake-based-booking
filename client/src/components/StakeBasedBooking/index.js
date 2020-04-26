@@ -39,46 +39,109 @@ export default class StakeBasedBooking extends Component {
         this._getNumberOfDistributedAddress = this._getNumberOfDistributedAddress.bind(this);
     }
 
+    handleInputLocalShopName({ target: { value } }) {
+        this.setState({ valueOfLocalShopName: value });
+    }
+
+    handleInputLocalShopAddress({ target: { value } }) {
+        this.setState({ valueOfLocalShopAddress: value });
+    }
+
+    handleInputLocalOrganizationName({ target: { value } }) {
+        this.setState({ valueOfLocalOrganizationName: value });
+    }
+
+    handleInputLocalOrganizationAddress({ target: { value } }) {
+        this.setState({ valueOfLocalOrganizationAddress: value });
+    }
+
+    handleInputBookedShopId({ target: { value } }) {
+        this.setState({ valueOfBookedShopId: Number(value) });
+    }
+
+    handleInputBookedDateYear({ target: { value } }) {
+        this.setState({ valueOfBookedDateYear: Number(value) });
+    }
+
+    handleInputBookedDateMonth({ target: { value } }) {
+        this.setState({ valueOfBookedDateMonth: Number(value) });
+    }
+
+    handleInputBookedDateDay({ target: { value } }) {
+        this.setState({ valueOfBookedDateDay: Number(value) });
+    }
+
+    handleInputPayAmount({ target: { value } }) {
+        this.setState({ valueOfPayAmount: value });
+    }
+
+    handleInputApproveCustomerId({ target: { value } }) {
+        this.setState({ valueOfApproveCustomerId: Number(value) });
+    }
+
+
     /***
      * @dev - Main Functions
      **/
     _registerLocalShop = async () => {
-        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
+        const { accounts, web3, stake_based_booking, stake_based_booking_address, valueOfLocalShopName, valueOfLocalShopAddress } = this.state;
 
-        const _localShopName = "Test Shop 1"
-        const _localShopAddress = walletAddressList["LocalShops"]["walletAddress1"];
+        const _localShopName = valueOfLocalShopName;
+        const _localShopAddress = valueOfLocalShopAddress;
         let res = await stake_based_booking.methods.registerLocalShop(_localShopName, _localShopAddress).send({ from: accounts[0] });
-        console.log('=== response of registerLocalShop() ===', res);        
+        console.log('=== response of registerLocalShop() ===', res);
+
+        this.setState({ valueOfLocalShopName: '', valueOfLocalShopAddress: '' });
     } 
 
     _registerLocalOrganization = async () => {
-        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
+        const { accounts, web3, stake_based_booking, stake_based_booking_address, valueOfLocalOrganizationName, valueOfLocalOrganizationAddress } = this.state;
 
-        const _localOrganizationName = "Test Organization 1"
-        const _localOrganizationAddress = walletAddressList["LocalOrganizations"]["walletAddress1"];
+        const _localOrganizationName = valueOfLocalOrganizationName;
+        const _localOrganizationAddress = valueOfLocalOrganizationAddress;
         let res = await stake_based_booking.methods.registerLocalOrganization(_localOrganizationName, _localOrganizationAddress).send({ from: accounts[0] });
         console.log('=== response of registerLocalOrganization() ===', res);        
+
+        this.setState({ valueOfLocalOrganizationName: '', valueOfLocalOrganizationAddress: '' });
     }
 
     _booking = async () => {
-        const { accounts, web3, dai, stake_based_booking, stake_based_booking_address } = this.state;
-        const _amount = 1.152;  // 1.152 DAI
-        const payAmount = web3.utils.toWei(`${_amount}`, 'ether');
-        const _bookedShopId = 1;
-        const _bookedDate = 1587868230;  // April 26, 2020 2:30:30 AM (GMT)
+        const { accounts, web3, dai, stake_based_booking, stake_based_booking_address, valueOfBookedShopId, valueOfBookedDateYear, valueOfBookedDateMonth, valueOfBookedDateDay, valueOfPayAmount } = this.state;
+        //const _amount = 1.152;  // 1.152 DAI
+        //const payAmount = web3.utils.toWei(`${_amount}`, 'ether');
+        const payAmount = web3.utils.toWei(valueOfPayAmount, 'ether');
+
+        const _bookedShopId = valueOfBookedShopId;
+        
+        //const _bookedDate = 1587868230;  // April 26, 2020 2:30:30 AM (GMT)
+        const _bookedDateYear = valueOfBookedDateYear;
+        const _bookedDateMonth = valueOfBookedDateMonth;
+        const _bookedDateDay = valueOfBookedDateDay;
 
         let res1 = await dai.methods.transfer(stake_based_booking_address, payAmount).send({ from: accounts[0] });
         console.log('=== response of transfer() ===', res2);
 
-        let res2 = await stake_based_booking.methods.booking(payAmount, _bookedShopId, _bookedDate).send({ from: accounts[0] });
+        let res2 = await stake_based_booking.methods.booking(payAmount, 
+                                                             _bookedShopId, 
+                                                             _bookedDateYear, 
+                                                             _bookedDateMonth, 
+                                                             _bookedDateDay).send({ from: accounts[0] });
         console.log('=== response of booking() ===', res2);
+
+        this.setState({ valueOfPayAmount: '', 
+                        valueOfBookedShopId: '', 
+                        valueOfBookedDateYear: '', 
+                        valueOfBookedDateMonth: '', 
+                        valueOfBookedDateDay: '' });
     }
 
     _approveCustomerComeShop = async () => {
-        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
-        const _customerId = 1;
+        const { accounts, web3, stake_based_booking, stake_based_booking_address, valueOfApproveCustomerId } = this.state;
+        const _customerId = valueOfApproveCustomerId;
         let res = await stake_based_booking.methods.approveCustomerComeShop(_customerId).send({ from: accounts[0] });
-        console.log('=== response of approveCustomerComeShop() ===', res);        
+        console.log('=== response of approveCustomerComeShop() ===', res);
+        
+        this.setState({ valueOfApproveCustomerId: '' });
     }    
 
     _distributePooledMoney = async () => {
@@ -288,21 +351,108 @@ export default class StakeBasedBooking extends Component {
                         >
                             <h4>Stake Based Booking</h4>
 
-                            <Button size={'small'} mt={3} mb={2} onClick={this._registerLocalShop}> Register Local Shop </Button> <br />
+                            <Table>
+                                <tr>
+                                    <td>Local Shop Name</td>
+                                    <td><Input type="text" placeholder="Please input Local Shop Name" value={this.state.valueOfLocalShopName} onChange={this.handleInputLocalShopName} /></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Local Shop Address</td>
+                                    <td><Input type="text" placeholder="Please input Local Shop Address" value={this.state.valueOfLocalShopAddress} onChange={this.handleInputLocalShopAddress} /></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><Button size={'small'} mt={3} mb={2} onClick={this._registerLocalShop}> Register Local Shop </Button></td>
+                                    <td></td>
+                                </tr>
+                            </Table>
 
-                            <Button size={'small'} mt={3} mb={2} onClick={this._registerLocalOrganization}> Register Local Organization </Button> <br />
+                            <br />
+
+                            <Table>
+                                <tr>
+                                    <td>Local Organization Name</td>
+                                    <td><Input type="text" placeholder="Please input Local Organization Name" value={this.state.valueOfLocalOrganizationName} onChange={this.handleInputLocalOrganizationName} /></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Local Organization Address</td>
+                                    <td><Input type="text" placeholder="Please input Local Organization Address" value={this.state.valueOfLocalOrganizationAddress} onChange={this.handleInputLocalOrganizationAddress} /></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><Button size={'small'} mt={3} mb={2} onClick={this._registerLocalOrganization}> Register Local Organization </Button></td>
+                                    <td></td>
+                                </tr>
+                            </Table>
+
+                            <br />
 
                             <h4>↓</h4>
 
-                            <Button size={'small'} mt={3} mb={2} onClick={this._booking}> Booking </Button> <br />
+                            <Table>
+                                <tr>
+                                    <td>Booked Shop Id</td>
+                                    <td><Input type="text" placeholder="Please input Booked Shop Id" value={this.state.valueOfLBookedShopId} onChange={this.handleInputBookedShopId} /></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Booked Date<br />(YYYY/MM/DD)</td>
+                                    <td><Input type="text" placeholder="Year (YYYY)" value={this.state.valueOfBookedDateYear} onChange={this.handleInputBookedDateYear} /></td>
+                                    <td><Input type="text" placeholder="Month (MM)" value={this.state.valueOfBookedDateMonth} onChange={this.handleInputBookedDateMonth} /></td>
+                                    <td><Input type="text" placeholder="Day (DD)" value={this.state.valueOfBookedDateDay} onChange={this.handleInputBookedDateDay} /></td>
+                                </tr> 
+                                <tr>
+                                    <td>Pay Amount</td>
+                                    <td><Input type="text" placeholder="Please input Pay Amount" value={this.state.valueOfPayAmount} onChange={this.handleInputPayAmount} /></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><Button size={'small'} mt={3} mb={2} onClick={this._booking}> Booking </Button></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </Table>
+                            
+                            <br />
 
                             <h4>↓</h4>
 
-                            <Button size={'small'} mt={3} mb={2} onClick={this._approveCustomerComeShop}> Approve thing that Customer Come Shop </Button> <br />
+                            <Table>
+                                <tr>
+                                    <td>Customer Id</td>
+                                    <td><Input type="text" placeholder="Please input Customer Id" value={this.state.valueOfApproveCustomerId} onChange={this.handleInputApproveCustomerId} /></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><Button size={'small'} mt={3} mb={2} onClick={this._approveCustomerComeShop}> Approve thing that Customer Come Shop </Button></td>
+                                    <td></td>
+                                </tr>
+                            </Table>
+
+                            <br />
 
                             <h4>↓</h4>
 
-                            <Button size={'small'} mt={3} mb={2} onClick={this._distributePooledMoney}> Distribute Pooled Money </Button> <br />
+                            <Table>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><Button size={'small'} mt={3} mb={2} onClick={this._distributePooledMoney}> Distribute Pooled Money </Button></td>
+                                    <td></td>
+                                </tr>
+                            </Table>
                         </Card>
                     </Grid>
 

@@ -83,7 +83,10 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
     /***
      * @dev - Stake DAI when customr book
      **/
-    function booking(uint _amount, uint _bookedShopId, uint _bookedDate) public returns (bool) {
+    function booking(uint _amount, uint _bookedShopId, uint _bookedDateYear, uint _bookedDateMonth, uint _bookedDateDay) public returns (bool) {
+        //@dev - Convert dateTime from date(YYYY/MM/DD) to timestamp
+        uint _bookedDate = bokkyPooBahsDateTimeContract.timestampFromDate(_bookedDateYear, _bookedDateMonth, _bookedDateDay);
+
         Customer storage customer = customers[currentCustomerId];
         customer.customerId = currentCustomerId;
         customer.customerAddress = msg.sender;

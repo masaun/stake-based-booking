@@ -132,11 +132,14 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
         uint _numberOfDistributedAddress = getNumberOfDistributedAddress();
         uint distributedAmountPerOneAddress = _totalBookedBalanceToday.div(_numberOfDistributedAddress);
 
+        //@dev - Approve this contract access transferred amount
+        dai.approve(address(this), distributedAmountPerOneAddress);
+
         //@dev - Execute distribution
         for (uint i=1; i <= currentCustomerId; i++) {
             if (getDistributedAddress(i) != address(0)) {
                 address to = getDistributedAddress(i);
-                erc20.transfer(to, distributedAmountPerOneAddress);
+                dai.transfer(to, distributedAmountPerOneAddress);
             }
         }
 

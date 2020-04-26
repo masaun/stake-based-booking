@@ -42,12 +42,16 @@ export default class StakeBasedBooking extends Component {
      * @dev - Main Functions
      **/
     _booking = async () => {
-        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
+        const { accounts, web3, dai, stake_based_booking, stake_based_booking_address } = this.state;
         const _amount = 1.152;  // 1.152 DAI
         const payAmount = web3.utils.toWei(`${_amount}`, 'ether');
         const _bookedDate = 1587868230;  // April 26, 2020 2:30:30 AM (GMT)
-        let res = await stake_based_booking.methods.booking(payAmount, _bookedDate).send({ from: accounts[0] });
-        console.log('=== response of booking() ===', res);
+
+        let res1 = await dai.methods.transfer(stake_based_booking_address, payAmount).send({ from: accounts[0] });
+        console.log('=== response of transfer() ===', res2);
+
+        let res2 = await stake_based_booking.methods.booking(payAmount, _bookedDate).send({ from: accounts[0] });
+        console.log('=== response of booking() ===', res2);
     }
 
     _approveCustomerComeShop = async () => {

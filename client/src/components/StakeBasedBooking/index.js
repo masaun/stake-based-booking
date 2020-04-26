@@ -45,12 +45,13 @@ export default class StakeBasedBooking extends Component {
         const { accounts, web3, dai, stake_based_booking, stake_based_booking_address } = this.state;
         const _amount = 1.152;  // 1.152 DAI
         const payAmount = web3.utils.toWei(`${_amount}`, 'ether');
+        const _bookedShopId = 1;
         const _bookedDate = 1587868230;  // April 26, 2020 2:30:30 AM (GMT)
 
         let res1 = await dai.methods.transfer(stake_based_booking_address, payAmount).send({ from: accounts[0] });
         console.log('=== response of transfer() ===', res2);
 
-        let res2 = await stake_based_booking.methods.booking(payAmount, _bookedDate).send({ from: accounts[0] });
+        let res2 = await stake_based_booking.methods.booking(payAmount, _bookedShopId, _bookedDate).send({ from: accounts[0] });
         console.log('=== response of booking() ===', res2);
     }
 

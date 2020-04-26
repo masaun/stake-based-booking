@@ -94,7 +94,7 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
 
         //@dev - Transfer to shop's wallet address
         address _shopAddress = 0x8Fc9d07b1B9542A71C4ba1702Cd230E160af6EB3;  // For testing
-        dai.transfer(_shopAddress, _amount);
+        erc20.transfer(_shopAddress, _amount);
 
         emit Booking(customer.customerId, 
                      customer.customerAddress, 

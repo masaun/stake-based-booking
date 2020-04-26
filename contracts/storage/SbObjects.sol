@@ -14,6 +14,7 @@ contract SbObjects {
     }
     
     struct LocalOrganization {
+        string localOrganizationName;
         address localOrganizationAddress;
     }
     

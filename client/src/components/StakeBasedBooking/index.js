@@ -59,8 +59,9 @@ export default class StakeBasedBooking extends Component {
     _registerLocalOrganization = async () => {
         const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
 
+        const _localOrganizationName = "Test Organization 1"
         const _localOrganizationAddress = walletAddressList["organizations"]["walletAddress1"];
-        let res = await stake_based_booking.methods.registerLocalOrganization(_localOrganizationAddress).send({ from: accounts[0] });
+        let res = await stake_based_booking.methods.registerLocalOrganization(_localOrganizationName, _localOrganizationAddress).send({ from: accounts[0] });
         console.log('=== response of registerLocalOrganization() ===', res);        
     }    
 

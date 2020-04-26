@@ -20,6 +20,7 @@ contract SbEvents {
     );
 
     event RegisterLocalOrganization(
+        string localOrganizationName,
         address localOrganizationAddress
     );
 

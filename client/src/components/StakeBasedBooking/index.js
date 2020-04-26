@@ -41,6 +41,24 @@ export default class StakeBasedBooking extends Component {
     /***
      * @dev - Main Functions
      **/
+    _registerLocalShop = async () => {
+        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
+
+        const _localShopName = "Test Shop 1"
+        const _localShopAddress = walletAddressList["LocalShops"]["walletAddress1"];
+        let res = await stake_based_booking.methods.registerLocalShop(_localShopName, _localShopAddress).send({ from: accounts[0] });
+        console.log('=== response of registerLocalShop() ===', res);        
+    } 
+
+    _registerLocalOrganization = async () => {
+        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
+
+        const _localOrganizationName = "Test Organization 1"
+        const _localOrganizationAddress = walletAddressList["LocalOrganizations"]["walletAddress1"];
+        let res = await stake_based_booking.methods.registerLocalOrganization(_localOrganizationName, _localOrganizationAddress).send({ from: accounts[0] });
+        console.log('=== response of registerLocalOrganization() ===', res);        
+    }
+
     _booking = async () => {
         const { accounts, web3, dai, stake_based_booking, stake_based_booking_address } = this.state;
         const _amount = 1.152;  // 1.152 DAI
@@ -60,24 +78,6 @@ export default class StakeBasedBooking extends Component {
         const _customerId = 1;
         let res = await stake_based_booking.methods.approveCustomerComeShop(_customerId).send({ from: accounts[0] });
         console.log('=== response of approveCustomerComeShop() ===', res);        
-    }    
-
-    _registerLocalShop = async () => {
-        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
-
-        const _localShopName = "Test Shop 1"
-        const _localShopAddress = walletAddressList["LocalShops"]["walletAddress1"];
-        let res = await stake_based_booking.methods.registerLocalShop(_localShopName, _localShopAddress).send({ from: accounts[0] });
-        console.log('=== response of registerLocalShop() ===', res);        
-    } 
-
-    _registerLocalOrganization = async () => {
-        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
-
-        const _localOrganizationName = "Test Organization 1"
-        const _localOrganizationAddress = walletAddressList["LocalOrganizations"]["walletAddress1"];
-        let res = await stake_based_booking.methods.registerLocalOrganization(_localOrganizationName, _localOrganizationAddress).send({ from: accounts[0] });
-        console.log('=== response of registerLocalOrganization() ===', res);        
     }    
 
     _distributePooledMoney = async () => {
@@ -280,13 +280,19 @@ export default class StakeBasedBooking extends Component {
                         >
                             <h4>Stake Based Booking</h4>
 
-                            <Button size={'small'} mt={3} mb={2} onClick={this._booking}> Booking </Button> <br />
-
-                            <Button size={'small'} mt={3} mb={2} onClick={this._approveCustomerComeShop}> Approve thing that Customer Come Shop </Button> <br />
-
                             <Button size={'small'} mt={3} mb={2} onClick={this._registerLocalShop}> Register Local Shop </Button> <br />
 
                             <Button size={'small'} mt={3} mb={2} onClick={this._registerLocalOrganization}> Register Local Organization </Button> <br />
+
+                            <h4>↓</h4>
+
+                            <Button size={'small'} mt={3} mb={2} onClick={this._booking}> Booking </Button> <br />
+
+                            <h4>↓</h4>
+
+                            <Button size={'small'} mt={3} mb={2} onClick={this._approveCustomerComeShop}> Approve thing that Customer Come Shop </Button> <br />
+
+                            <h4>↓</h4>
 
                             <Button size={'small'} mt={3} mb={2} onClick={this._distributePooledMoney}> Distribute Pooled Money </Button> <br />
                         </Card>

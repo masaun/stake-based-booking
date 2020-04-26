@@ -16,12 +16,13 @@ contract SbStorage is SbObjects, SbEvents {
     
     //////////////////////////////////
     // @dev - Define as storage
-    ///////////////////////////////////
-    mapping (uint => Customer) customers;
-    
+    ///////////////////////////////////    
     LocalOrganization[] public localOrganizations;
 
     LocalShop[] public localShops;
+  
+    mapping (uint => Customer) customers;
+
   
 
     ExampleObject[] public exampleObjects;

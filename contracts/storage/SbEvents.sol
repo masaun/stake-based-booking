@@ -5,6 +5,17 @@ import "./SbObjects.sol";
 
 contract SbEvents {
 
+    event RegisterLocalShop(
+        uint localShopId,
+        string localShopName,
+        address localShopAddress
+    );
+
+    event RegisterLocalOrganization(
+        string localOrganizationName,
+        address localOrganizationAddress
+    );
+
     event Booking(
         uint customerId,
         address customerAddress,
@@ -18,17 +29,6 @@ contract SbEvents {
         uint customerId, 
         bool isComingShop, 
         uint comingTime
-    );
-
-    event RegisterLocalShop(
-        uint localShopId,
-        string localShopName,
-        address localShopAddress
-    );
-
-    event RegisterLocalOrganization(
-        string localOrganizationName,
-        address localOrganizationAddress
     );
 
     event DistributePooledMoney(

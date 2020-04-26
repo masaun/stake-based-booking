@@ -4,16 +4,6 @@ pragma experimental ABIEncoderV2;
 
 contract SbObjects {
 
-    struct Customer {
-        uint customerId;
-        address customerAddress;
-        uint bookedShopId;
-        uint bookedDate;
-        uint amount;
-        bool isComingShop;
-        uint comingTime;       
-    }
-    
     struct LocalShop {
         uint localShopId;
         string localShopName;
@@ -24,7 +14,18 @@ contract SbObjects {
         string localOrganizationName;
         address localOrganizationAddress;
     }
+
+    struct Customer {
+        uint customerId;
+        address customerAddress;
+        uint bookedShopId;
+        uint bookedDate;
+        uint amount;
+        bool isComingShop;
+        uint comingTime;       
+    }
     
+
 
     enum ExampleType { TypeA, TypeB, TypeC }
 

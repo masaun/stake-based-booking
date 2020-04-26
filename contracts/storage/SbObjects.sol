@@ -7,13 +7,15 @@ contract SbObjects {
     struct Customer {
         uint customerId;
         address customerAddress;
-        uint amount;
+        uint bookedShopId;
         uint bookedDate;
+        uint amount;
         bool isComingShop;
         uint comingTime;       
     }
     
     struct LocalShop {
+        uint localShopId;
         string localShopName;
         address localShopAddress;
     }    

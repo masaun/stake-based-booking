@@ -53,13 +53,16 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
      * @dev - Register Local Shop here
      **/
     function registerLocalShop(string memory _localShopName, address _localShopAddress) public returns (bool) {
+        uint currentShopId = localShops.length + 1;
         LocalShop memory localShop = LocalShop({
+            localShopId: currentShopId,
             localShopName: _localShopName,
             localShopAddress: _localShopAddress
         });
         localShops.push(localShop);
 
-        emit RegisterLocalShop(localShop.localShopName,
+        emit RegisterLocalShop(localShop.localShopId,
+                               localShop.localShopName,
                                localShop.localShopAddress);
     }
      
@@ -80,10 +83,11 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
     /***
      * @dev - Stake DAI when customr book
      **/
-    function booking(uint _amount, uint _bookedDate) public returns (bool) {
+    function booking(uint _amount, uint _bookedShopId, uint _bookedDate) public returns (bool) {
         Customer storage customer = customers[currentCustomerId];
         customer.customerId = currentCustomerId;
         customer.customerAddress = msg.sender;
+        customer.bookedShopId = _bookedShopId;
         customer.bookedDate = _bookedDate;
         customer.amount = _amount;
         customer.isComingShop = false;
@@ -94,8 +98,9 @@ contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
 
         emit Booking(customer.customerId, 
                      customer.customerAddress, 
-                     customer.amount, 
+                     customer.bookedShopId,
                      customer.bookedDate,
+                     customer.amount, 
                      customer.isComingShop);
 
         currentCustomerId++;

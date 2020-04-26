@@ -8,8 +8,9 @@ contract SbEvents {
     event Booking(
         uint customerId,
         address customerAddress,
-        uint amount,
+        uint bookedShopId,
         uint bookedDate,
+        uint amount,
         bool isComingShop
     );
  
@@ -20,6 +21,7 @@ contract SbEvents {
     );
 
     event RegisterLocalShop(
+        uint localShopId,
         string localShopName,
         address localShopAddress
     );

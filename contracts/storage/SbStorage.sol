@@ -1,12 +1,12 @@
 pragma solidity ^0.5.11;
 pragma experimental ABIEncoderV2;
 
-import "./McObjects.sol";
-import "./McEvents.sol";
+import "./SbObjects.sol";
+import "./SbEvents.sol";
 
 
 // shared storage
-contract McStorage is McObjects, McEvents {
+contract SbStorage is SbObjects, SbEvents {
 
     ///////////////////////////////////
     // @dev - Define as memory
@@ -16,9 +16,14 @@ contract McStorage is McObjects, McEvents {
     
     //////////////////////////////////
     // @dev - Define as storage
-    ///////////////////////////////////
+    ///////////////////////////////////    
+    LocalOrganization[] public localOrganizations;
+
+    LocalShop[] public localShops;
+  
     mapping (uint => Customer) customers;
-    
+
+  
 
     ExampleObject[] public exampleObjects;
 

@@ -2,13 +2,25 @@ pragma solidity ^0.5.11;
 pragma experimental ABIEncoderV2;
 
 
-contract McObjects {
+contract SbObjects {
+
+    struct LocalShop {
+        uint localShopId;
+        string localShopName;
+        address localShopAddress;
+    }    
+
+    struct LocalOrganization {
+        string localOrganizationName;
+        address localOrganizationAddress;
+    }
 
     struct Customer {
         uint customerId;
         address customerAddress;
-        uint amount;
+        uint bookedShopId;
         uint bookedDate;
+        uint amount;
         bool isComingShop;
         uint comingTime;       
     }

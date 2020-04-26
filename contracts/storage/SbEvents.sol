@@ -1,15 +1,27 @@
 pragma solidity ^0.5.11;
 
-import "./McObjects.sol";
+import "./SbObjects.sol";
 
 
-contract McEvents {
+contract SbEvents {
+
+    event RegisterLocalShop(
+        uint localShopId,
+        string localShopName,
+        address localShopAddress
+    );
+
+    event RegisterLocalOrganization(
+        string localOrganizationName,
+        address localOrganizationAddress
+    );
 
     event Booking(
         uint customerId,
         address customerAddress,
-        uint amount,
+        uint bookedShopId,
         uint bookedDate,
+        uint amount,
         bool isComingShop
     );
  
@@ -18,6 +30,13 @@ contract McEvents {
         bool isComingShop, 
         uint comingTime
     );
+
+    event DistributePooledMoney(
+        uint totalBookedBalanceToday, 
+        uint numberOfDistributedAddress,
+        uint distributedAmountPerOneAddress
+    );
+
 
 
     event _TransferFrom(

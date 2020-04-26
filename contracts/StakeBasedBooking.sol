@@ -9,8 +9,8 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 
 // Storage
-import "./storage/McStorage.sol";
-import "./storage/McConstants.sol";
+import "./storage/SbStorage.sol";
+import "./storage/SbConstants.sol";
 
 // DAI
 import "./DAI/dai.sol";
@@ -23,7 +23,7 @@ import "./lib/BokkyPooBahsDateTimeLibrary/contracts/BokkyPooBahsDateTimeContract
 /***
  * @notice - This contract is that ...
  **/
-contract MarketplaceRegistry is Ownable, McStorage, McConstants {
+contract StakeBasedBooking is Ownable, SbStorage, SbConstants {
     using SafeMath for uint;
 
     uint currentCustomerId = 1;
@@ -49,22 +49,59 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
      * DonatedOrganization
      **/
 
+    /***
+     * @dev - Register Local Shop here
+     **/
+    function registerLocalShop(string memory _localShopName, address _localShopAddress) public returns (bool) {
+        uint currentShopId = localShops.length + 1;
+        LocalShop memory localShop = LocalShop({
+            localShopId: currentShopId,
+            localShopName: _localShopName,
+            localShopAddress: _localShopAddress
+        });
+        localShops.push(localShop);
+
+        emit RegisterLocalShop(localShop.localShopId,
+                               localShop.localShopName,
+                               localShop.localShopAddress);
+    }
+     
+    /***
+     * @dev - Register Local Organization (Local NGO/NPO, etc...) to donationList
+     **/
+    function registerLocalOrganization(string memory _localOrganizationName, address _localOrganizationAddress) public returns (bool) {
+        LocalOrganization memory localOrganization = LocalOrganization({
+            localOrganizationName: _localOrganizationName,
+            localOrganizationAddress: _localOrganizationAddress
+        });
+        localOrganizations.push(localOrganization);
+
+        emit RegisterLocalOrganization(localOrganization.localOrganizationName,
+                                       localOrganization.localOrganizationAddress);
+    }
 
     /***
      * @dev - Stake DAI when customr book
      **/
-    function booking(uint _amount, uint _bookedDate) public returns (bool) {
+    function booking(uint _amount, uint _bookedShopId, uint _bookedDate) public returns (bool) {
         Customer storage customer = customers[currentCustomerId];
         customer.customerId = currentCustomerId;
         customer.customerAddress = msg.sender;
+        customer.bookedShopId = _bookedShopId;
         customer.bookedDate = _bookedDate;
         customer.amount = _amount;
         customer.isComingShop = false;
 
+        //@dev - Transfer to shop's wallet address
+        address _shopAddress = 0x8Fc9d07b1B9542A71C4ba1702Cd230E160af6EB3;  // For testing
+        dai.approve(address(this), _amount);
+        dai.transfer(_shopAddress, _amount);
+
         emit Booking(customer.customerId, 
                      customer.customerAddress, 
-                     customer.amount, 
+                     customer.bookedShopId,
                      customer.bookedDate,
+                     customer.amount, 
                      customer.isComingShop);
 
         currentCustomerId++;
@@ -82,11 +119,6 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
                                      customer.isComingShop, 
                                      customer.comingTime);
     }
-    
-    /***
-     * @dev - Local Organization register to donationList
-     **/
-    function registerLocalOrganization() public returns (bool) {}
 
     /***
      * @dev - Distribute pooled money
@@ -100,15 +132,24 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         uint _numberOfDistributedAddress = getNumberOfDistributedAddress();
         uint distributedAmountPerOneAddress = _totalBookedBalanceToday.div(_numberOfDistributedAddress);
 
+        //@dev - Approve this contract access transferred amount
+        dai.approve(address(this), distributedAmountPerOneAddress);
+
         //@dev - Execute distribution
         for (uint i=1; i <= currentCustomerId; i++) {
             if (getDistributedAddress(i) != address(0)) {
                 address to = getDistributedAddress(i);
-                erc20.transfer(to, distributedAmountPerOneAddress);
+                dai.transfer(to, distributedAmountPerOneAddress);
             }
         }
+
+        emit DistributePooledMoney(_totalBookedBalanceToday, _numberOfDistributedAddress, distributedAmountPerOneAddress);
     }
 
+
+    /************************************
+     * @dev - Internal functions
+     ************************************/
     function getTimeframeToday() public view returns (uint _startTime, uint _endTime, uint _today) {
         uint timestampNow = now;
         uint year;
@@ -147,7 +188,6 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
 
         return distributedAddress;
     }
-    
 
     function getNumberOfDistributedAddress() internal view returns (uint _numberOfDistributedAddress) {
         //@dev - Time frame of today
@@ -171,7 +211,6 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
             }
         }
     }
-    
 
     function getTotalBookedBalanceToday() internal view returns (uint _totalBookedBalanceToday) {
         //@dev - Time frame of today
@@ -212,7 +251,7 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
      **/
     function testFunc(uint256 _mintAmount) public returns (bool, uint256 _approvedValue) {
         uint256 _id = 1;
-        uint256 _exchangeRateCurrent = McConstants.onePercent;
+        uint256 _exchangeRateCurrent = SbConstants.onePercent;
 
         address _to = 0x8Fc9d07b1B9542A71C4ba1702Cd230E160af6EB3;
 
@@ -232,7 +271,7 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
 
         emit Example(_id, _exchangeRateCurrent, msg.sender, _approvedValue);
 
-        return (McConstants.CONFIRMED, _approvedValue);
+        return (SbConstants.CONFIRMED, _approvedValue);
     }
 
     function balanceOfCurrentAccount(address _currentAccount) public view returns (uint256 balanceOfCurrentAccount) {
@@ -250,13 +289,6 @@ contract MarketplaceRegistry is Ownable, McStorage, McConstants {
         erc20.transferFrom(_from, _to, _mintAmount);
 
         emit _TransferFrom(_from, _to, _mintAmount, _allowanceAmount);
-
-        // erc20.approve(daiAddress, _mintAmount.mul(10**18));
-        // uint256 _allowanceAmount = erc20.allowance(address(this), daiAddress);
-
-        // erc20.transferFrom(_from, _to, _mintAmount.mul(10**18).div(10**2));
-
-        // emit _TransferFrom(_from, _to, _mintAmount.mul(10**18), _allowanceAmount);
     }
     
 }

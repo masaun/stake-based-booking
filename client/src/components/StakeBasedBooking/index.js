@@ -357,7 +357,7 @@ export default class StakeBasedBooking extends Component {
                 <Grid container style={{ marginTop: 32 }}>
                     <Grid item xs={12}>
                         <Card width={"auto"} 
-                              maxWidth={"1280px"} 
+                              maxWidth={"960px"} 
                               mx={"auto"} 
                               my={5} 
                               p={20} 

@@ -12,8 +12,9 @@ import { zeppelinSolidityHotLoaderOptions } from '../../../config/webpack';
 import styles from '../../App.module.scss';
 //import './App.css';
 
-import { walletAddressList } from '../../data/tokenAddress/tokenAddress.js'
 import { contractAddressList } from '../../data/contractAddress/contractAddress.js'
+import { tokenAddressList } from '../../data/tokenAddress/tokenAddress.js'
+import { walletAddressList } from '../../data/walletAddress/walletAddress.js'
 
 
 export default class StakeBasedBooking extends Component {
@@ -28,11 +29,51 @@ export default class StakeBasedBooking extends Component {
             route: window.location.pathname.replace("/", ""),
         };
 
+        this._booking = this._booking.bind(this);
+        this._approveCustomerComeShop = this._approveCustomerComeShop.bind(this);
+        this._registerLocalOrganization = this._registerLocalOrganization.bind(this);
+        this._distributePooledMoney = this._distributePooledMoney.bind(this);
+
         this.getTestData = this.getTestData.bind(this);
     }
 
     /***
      * @dev - Main Functions
+     **/
+    _booking = async () => {
+        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
+        const _amount = 1.152;  // 1.152 DAI
+        const payAmount = web3.utils.toWei(`${_amount}`, 'ether');
+        const _bookedDate = 1588086000;  // April 28, 2020 3:00:00 PM (GMT)
+        let res = await stake_based_booking.methods.booking(payAmount, _bookedDate).send({ from: accounts[0] });
+        console.log('=== response of booking() ===', res);
+    }
+
+    _approveCustomerComeShop = async () => {
+        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
+        const _customerId = 1;
+        let res = await stake_based_booking.methods.approveCustomerComeShop(_customerId).send({ from: accounts[0] });
+        console.log('=== response of approveCustomerComeShop() ===', res);        
+    }    
+
+    _registerLocalOrganization = async () => {
+        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
+
+        const _localOrganizationAddress = walletAddressList["organizations"]["walletAddress1"];
+        let res = await stake_based_booking.methods.registerLocalOrganization(_localOrganizationAddress).send({ from: accounts[0] });
+        console.log('=== response of registerLocalOrganization() ===', res);        
+    }    
+
+    _distributePooledMoney = async () => {
+        const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
+
+        let res = await stake_based_booking.methods.distributePooledMoney().send({ from: accounts[0] });
+        console.log('=== response of distributePooledMoney() ===', res); 
+    }
+
+
+    /***
+     * @dev - Test Functions
      **/
     getTimeframeToday = async () => {
         const { accounts, web3, stake_based_booking, stake_based_booking_address } = this.state;
@@ -40,7 +81,6 @@ export default class StakeBasedBooking extends Component {
         let res = await stake_based_booking.methods.getTimeframeToday().call();
         console.log('=== response of getTimeframeToday() ===', res);
     }
-
 
 
     /***
@@ -211,8 +251,40 @@ export default class StakeBasedBooking extends Component {
     render() {
         const { accounts, stake_based_booking } = this.state;
 
+        this._approveCustomerComeShop = this._approveCustomerComeShop.bind(this);
+        this._registerLocalOrganization = this._registerLocalOrganization.bind(this);
+        this._distributePooledMoney = this._distributePooledMoney.bind(this);
+
         return (
             <div className={styles.widgets}>
+                <Grid container style={{ marginTop: 32 }}>
+                    <Grid item xs={12}>
+                        <Card width={"auto"} 
+                              maxWidth={"1280px"} 
+                              mx={"auto"} 
+                              my={5} 
+                              p={20} 
+                              borderColor={"#E8E8E8"}
+                        >
+                            <h4>Stake Based Booking</h4>
+
+                            <Button size={'small'} mt={3} mb={2} onClick={this._booking}> Booking </Button> <br />
+
+                            <Button size={'small'} mt={3} mb={2} onClick={this._approveCustomerComeShop}> Approve thing that Customer Come Shop </Button> <br />
+
+                            <Button size={'small'} mt={3} mb={2} onClick={this._registerLocalOrganization}> Register Local Organization </Button> <br />
+
+                            <Button size={'small'} mt={3} mb={2} onClick={this._distributePooledMoney}> Distribute Pooled Money </Button> <br />
+                        </Card>
+                    </Grid>
+
+                    <Grid item xs={4}>
+                    </Grid>
+
+                    <Grid item xs={4}>
+                    </Grid>
+                </Grid>
+
                 <Grid container style={{ marginTop: 32 }}>
                     <Grid item xs={12}>
                         <Card width={"auto"} 
